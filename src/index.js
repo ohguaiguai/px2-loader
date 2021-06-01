@@ -1,12 +1,28 @@
 import React from 'react';
 import ReactDOM from 'react-dom';
-import 'amfe-flexible'; // 用来设置根 font-size
+import A from './A';
+import B from './B';
 
-import './index.css';
+class App extends React.Component {
+  state = {
+    val: '',
+  };
+  onchange = (el) => {
+    this.setState({
+      val: el.target.value,
+    });
+  };
+  render() {
+    const val = this.state.val;
+    // console.log('val', val);
+    return (
+      <div>
+        <A val={val} />
+        <B val={val} />
+        <input onChange={this.onchange} />
+      </div>
+    );
+  }
+}
 
-import 'antd/dist/antd.css';
-import { Button } from 'antd';
-
-// ReactDOM.render('我是一个按钮', document.getElementById('root'));
-
-ReactDOM.render(<Button>我是一个按钮</Button>, document.getElementById('root'));
+ReactDOM.render(<App />, document.getElementById('root'));

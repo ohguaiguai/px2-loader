@@ -1,22 +1,31 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 
-// 使用自定义的 loader, 方法一
-const px2remLoaderPath = path.resolve(__dirname, 'loaders/my-px2rem-loader.js');
-const px2vwLoaderPath = path.resolve(__dirname, 'loaders/my-px2vw-loader.js');
+// const reactDevLoaderPath = path.resolve(
+//   __dirname,
+//   'loaders/react-dev-loader.js'
+// );
 
 module.exports = {
   mode: 'development',
-  devtool: false,
+  devtool: 'source-map',
   entry: './src/index.js',
   output: {
     path: path.resolve(__dirname, 'dist'),
     filename: '[name].js',
   },
-  resolveLoader: {
-    alias: {
-      'px2rem-loader': px2remLoaderPath,
-      'px2vw-loader': px2vwLoaderPath,
+  // resolveLoader: {
+  //   alias: {
+  //     'react-dev-loader': reactDevLoaderPath,
+  //   },
+  // },
+  devServer: {
+    inline: true,
+    port: 8008,
+  },
+  optimization: {
+    splitChunks: {
+      chunks: 'all',
     },
   },
   module: {
@@ -30,7 +39,12 @@ module.exports = {
               presets: ['@babel/preset-env', '@babel/preset-react'],
             },
           },
+          {
+            loader: 'react-dev-loader',
+            options: {},
+          },
         ],
+        exclude: /node_modules/,
       },
       {
         test: /\.css$/,
@@ -40,16 +54,6 @@ module.exports = {
           },
           {
             loader: 'css-loader',
-          },
-          {
-            // loader: 'px2rem-loader',
-            loader: 'px2vw-loader',
-            options: {
-              // remUnit: 75,
-              // remPrecision: 8, // 保留8位小数
-              vwPrecision: 8,
-              exclude: /antd\.css/,
-            },
           },
         ],
       },
