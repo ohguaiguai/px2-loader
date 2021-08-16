@@ -10,10 +10,23 @@ let loaderUtils = require('loader-utils');
 function loader(source, ast) {
   // 通过 getOptions 可以获取到用户在 webpack.config.js 中配置的参数对象  { remUnit: 75, remPrecision: 8}
   let options = loaderUtils.getOptions(this);
+  
   // this.resource 当前正在转换的模块的绝对路径
+  
+  let goon = false;
+
   if (options.exclude && options.exclude.test(this.resource)) {
-    return source; // 不转换，直接返回
+    goon = false;
   }
+  // include 优先级大于exclude
+  if (options.include && options.include.test(this.resource)) {
+    goon = true;
+  }
+
+  if (!goon) {
+    return source;
+  }
+  
   let px2rem = new Px2rem(options);
   //   console.log(source);
   let target = px2rem.generateRem(source);
